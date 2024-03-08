@@ -1,14 +1,8 @@
-# Programme: Résolveur CNF
-
-# Fonction: solve_binary_cnf
-# Entrée: CNF (expression CNF sous forme d'une liste de listes)
-# Sortie: Liste représentant une affectation satisfaisante des variables ou None si impossible à trouver
-
 def solve_binary_cnf(cnf):
     """
     Résout une expression CNF binaire.
     :param cnf: Expression CNF sous forme d'une liste de listes, chaque liste représentant une clause.
-    :return: Liste représentant une affectation satisfaisante des variables ou None si impossible à trouver.
+    :return: Liste de toutes les affectations satisfaisantes des variables ou une liste vide si aucune solution trouvée.
     """
     def is_satisfiable(assignment):
         """
@@ -34,27 +28,25 @@ def solve_binary_cnf(cnf):
         Fonction de rétrogradation utilisée pour rechercher toutes les affectations possibles.
         :param assignment: Affectation de variables sous forme d'une liste de valeurs booléennes.
         :param var_index: Index de la variable à affecter.
-        :return: Affectation satisfaisante des variables ou None si aucune solution trouvée.
+        :return: Liste de toutes les affectations satisfaisantes des variables ou une liste vide si aucune solution trouvée.
         """
         if var_index == len(assignment):
-            return assignment if is_satisfiable(assignment) else None
+            if is_satisfiable(assignment):
+                satisfiable_solutions.append(assignment.copy())
+            else:
+                non_satisfiable_solutions.append(assignment.copy())
+            return
 
         for value in [False, True]:
             assignment[var_index] = value
-            result = backtrack(assignment, var_index + 1)
-            if result:
-                return result
+            backtrack(assignment, var_index + 1)
 
-        # Si aucune solution trouvée, rétrogradation
-        assignment[var_index] = None
-        return None
-
-    # Détermine le nombre de variables dans l'expression CNF
     num_variables = max([abs(literal) for clause in cnf for literal in clause])
-
-    # Ajouter 1 pour tenir compte de l'indexation à partir de 0
     assignment = [None] * (num_variables + 1)
-    return backtrack(assignment, 1)
+    satisfiable_solutions = []
+    non_satisfiable_solutions = []
+    backtrack(assignment, 1)
+    return satisfiable_solutions, non_satisfiable_solutions
 
 
 def parse_cnf():
@@ -75,11 +67,18 @@ def parse_cnf():
 
 # Programme principal
 print("Entrez l'expression CNF")
-cnf = parse_cnf() # Analyse de l'expression CNF saisie par l'utilisateur
-solution = solve_binary_cnf(cnf) # Résolution de l'expression CNF
+cnf = parse_cnf()  # Analyse de l'expression CNF saisie par l'utilisateur
+satisfiable_solutions, non_satisfiable_solutions = solve_binary_cnf(cnf)  # Résolution de l'expression CNF
 
-if solution:
-    print("Affectation satisfaisante :", solution)
+if satisfiable_solutions:
+    print("\033[32mSolutions satisfaisantes:")
+    for solution in satisfiable_solutions:
+        print("Affectation :", solution)
 else:
-    print("Impossible de trouver une solution.")
+    print("\033[31mAucune solution satisfaisante trouvée.")
 
+if non_satisfiable_solutions:
+    print("\033[31mSolutions non satisfaisantes:")
+    for solution in non_satisfiable_solutions:
+        print("Affectation :", solution)
+          
