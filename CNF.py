@@ -66,7 +66,6 @@ def parse_cnf():
 
 
 # Programme principal
-print("Entrez l'expression CNF")
 cnf = parse_cnf()  # Analyse de l'expression CNF saisie par l'utilisateur
 satisfiable_solutions, non_satisfiable_solutions = solve_binary_cnf(cnf)  # Résolution de l'expression CNF
 
