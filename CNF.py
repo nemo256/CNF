@@ -13,10 +13,10 @@ def solve_binary_cnf(cnf):
         for clause in cnf:
             clause_satisfied = False
             for literal in clause:
-                if literal > 0 and assignment[abs(literal)]:
+                if literal > 0 and assignment[literal]:
                     clause_satisfied = True
                     break
-                elif literal < 0 and not assignment[abs(literal)]:
+                elif literal < 0 and not assignment[-literal]:
                     clause_satisfied = True
                     break
             if not clause_satisfied:
@@ -32,9 +32,9 @@ def solve_binary_cnf(cnf):
         """
         if var_index == len(assignment):
             if is_satisfiable(assignment):
-                satisfiable_solutions.append(assignment.copy())
+                satisfiable_solutions.append(assignment[1:].copy())  # Skip the first variable (x0)
             else:
-                non_satisfiable_solutions.append(assignment.copy())
+                non_satisfiable_solutions.append(assignment[1:].copy())  # Skip the first variable (x0)
             return
 
         for value in [False, True]:
@@ -45,7 +45,7 @@ def solve_binary_cnf(cnf):
     assignment = [None] * (num_variables + 1)
     satisfiable_solutions = []
     non_satisfiable_solutions = []
-    backtrack(assignment, 1)
+    backtrack(assignment, 1)  # Start indexing from 1
     return satisfiable_solutions, non_satisfiable_solutions
 
 
@@ -70,12 +70,13 @@ cnf = parse_cnf()  # Analyse de l'expression CNF saisie par l'utilisateur
 satisfiable_solutions, non_satisfiable_solutions = solve_binary_cnf(cnf)  # Résolution de l'expression CNF
 
 if satisfiable_solutions:
+    print("\033[32mSolutions satisfaisantes: ", len(satisfiable_solutions))
     for solution in satisfiable_solutions:
-        print("\033[32mSatisfaisante :", solution)
+        print("Affectation :", solution)
 else:
     print("\033[31mAucune solution satisfaisante trouvée.")
 
 if non_satisfiable_solutions:
+    print("\033[31mSolutions non satisfaisantes: ", len(non_satisfiable_solutions))
     for solution in non_satisfiable_solutions:
-        print("\033[31mNon Satisfaisante :", solution)
-          
+        print("Affectation :", solution)
