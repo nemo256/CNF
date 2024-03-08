@@ -22,6 +22,11 @@
 * [License 📑](#license)
 
 ## Install 🔨
+- Setup a python virtual environment
+```shell
+$ python -m venv venv
+$ source venv/bin/activate
+```
 - Install packages
 ```shell
 $ pip install -r requirements.txt
