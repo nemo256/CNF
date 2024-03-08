@@ -68,54 +68,68 @@ def parse_cnf():
         cnf.append(clause)
     return cnf
 
-#
-# def plot_decision_tree(satisfiable_solutions, non_satisfiable_solutions):
-#     """
-#     Plot the decision tree with color-coded nodes for satisfiable and non-satisfiable solutions.
-#     """
-#     G = nx.DiGraph()
-#
-#     # Add nodes for x1
-#     G.add_node('x1')
-#
-#     # Add edges for x1 to its children
-#     for solution in satisfiable_solutions:
-#         current_node = 'x1'
-#         for value in solution:
-#             next_node = f'x{int(current_node[1:]) + 1}'
-#             G.add_node(next_node)
-#             G.add_edge(current_node, next_node, color='green', style='solid')
-#             current_node = next_node
-#
-#     for solution in non_satisfiable_solutions:
-#         current_node = 'x1'
-#         for value in solution:
-#             next_node = f'x{int(current_node[1:]) + 1}'
-#             G.add_node(next_node)
-#             G.add_edge(current_node, next_node, color='red', style='dashed')
-#             current_node = next_node
-#
-#     # Draw the graph
-#     pos = nx.shell_layout(G)
-#
-#     # Draw nodes
-#     nx.draw_networkx_nodes(G, pos, node_color='yellow', node_size=700, alpha=0.8)
-#
-#     # Draw edges
-#     edge_colors = [data['color'] for _, _, data in G.edges(data=True)]
-#     edge_styles = [data['style'] for _, _, data in G.edges(data=True)]
-#     nx.draw_networkx_edges(G, pos, edge_color=edge_colors, style=edge_styles, width=2, alpha=0.7)
-#
-#     # Draw labels
-#     labels = {node: node.replace("x", "") for node in G.nodes()}
-#     nx.draw_networkx_labels(G, pos, labels=labels, font_size=12, font_color='black')
-#
-#     # Remove axis
-#     plt.axis('off')
-#
-#     # Show plot
-#     plt.title("Decision Tree")
-#     plt.show()
+
+def plot_decision_tree(satisfiable_solutions, non_satisfiable_solutions):
+    """
+    Plot the decision tree with color-coded nodes for satisfiable and non-satisfiable solutions.
+    """
+    G = nx.DiGraph()
+
+    # Add nodes for x1
+    G.add_node('x1')
+
+    for solution in satisfiable_solutions:
+        current_node = 'x1'
+        for value in solution:
+            next_node = f'x{int(current_node[1:]) + 1}'
+            G.add_node(next_node)
+            if value:
+                G.add_edge(current_node, next_node, color='green', style='solid')
+            else:
+                G.add_edge(current_node, next_node, color='red', style='dashed')
+            current_node = next_node
+
+        # Add a node for 1 (a node with just 1 in it)
+        G.add_node('1')
+        G.add_edge(next_node, '1', color='green', style='solid')
+
+    for solution in non_satisfiable_solutions:
+        current_node = 'x1'
+        for value in solution:
+            next_node = f'x{int(current_node[1:]) + 1}'
+            G.add_node(next_node)
+            if value:
+                G.add_edge(current_node, next_node, color='green', style='solid')
+            else:
+                G.add_edge(current_node, next_node, color='red', style='dashed')
+            current_node = next_node
+
+        # Add a node for 1 (a node with just 1 in it)
+        G.add_node('1')
+        G.add_edge(next_node, '1', color='red', style='dashed')
+
+    # Draw the graph
+    pos = nx.shell_layout(G)
+
+    # Draw nodes
+    nx.draw_networkx_nodes(G, pos, node_color='yellow', node_size=700, alpha=0.8)
+
+    # Draw edges
+    edge_colors = [data['color'] for _, _, data in G.edges(data=True)]
+    edge_styles = [data['style'] for _, _, data in G.edges(data=True)]
+    nx.draw_networkx_edges(G, pos, edge_color=edge_colors, style=edge_styles, width=2, alpha=0.7)
+
+    # Draw labels
+    labels = {node: node.replace("x", "") for node in G.nodes() if node != '1'}
+    labels['1'] = '1'
+    nx.draw_networkx_labels(G, pos, labels=labels, font_size=12, font_color='black')
+
+    # Remove axis
+    plt.axis('off')
+
+    # Show plot
+    plt.title("Decision Tree")
+    plt.show()
 
 
 # Programme principal
@@ -135,5 +149,5 @@ if non_satisfiable_solutions:
         print("Affectation :", solution)
 
 # Plot the decision tree
-# plot_decision_tree(satisfiable_solutions, non_satisfiable_solutions)
+plot_decision_tree(satisfiable_solutions, non_satisfiable_solutions)
 
