@@ -73,31 +73,47 @@ def plot_decision_tree(satisfiable_solutions, non_satisfiable_solutions):
     """
     Plot the decision tree with color-coded nodes for satisfiable and non-satisfiable solutions.
     """
-    G = nx.Graph()
-    pos = {}
-    color_map = []
+    G = nx.DiGraph()
 
-    # Add nodes for satisfiable solutions
-    for i, solution in enumerate(satisfiable_solutions):
-        node_label = f"S{i + 1}"
-        G.add_node(node_label)
-        pos[node_label] = (i, 1)
-        color_map.append('green')
+    # Add nodes for x1
+    G.add_node('x1')
 
-    # Add nodes for non-satisfiable solutions
-    for i, solution in enumerate(non_satisfiable_solutions):
-        node_label = f"NS{i + 1}"
-        G.add_node(node_label)
-        pos[node_label] = (i, 0)
-        color_map.append('red')
+    # Add edges for x1 to its children
+    for solution in satisfiable_solutions:
+        current_node = 'x1'
+        for value in solution:
+            next_node = f'x{int(current_node[1:]) + 1}'
+            G.add_node(next_node)
+            G.add_edge(current_node, next_node, color='green', style='solid')
+            current_node = next_node
 
-    # Add edges between nodes
-    for i in range(min(len(satisfiable_solutions), len(non_satisfiable_solutions))):
-        G.add_edge(f"S{i + 1}", f"NS{i + 1}")
+    for solution in non_satisfiable_solutions:
+        current_node = 'x1'
+        for value in solution:
+            next_node = f'x{int(current_node[1:]) + 1}'
+            G.add_node(next_node)
+            G.add_edge(current_node, next_node, color='red', style='dashed')
+            current_node = next_node
 
-    # Plot the decision tree
-    plt.figure(figsize=(10, 6))
-    nx.draw(G, pos, with_labels=True, node_size=5000, node_color=color_map, font_size=10, font_weight='bold')
+    # Draw the graph
+    pos = nx.shell_layout(G)
+
+    # Draw nodes
+    nx.draw_networkx_nodes(G, pos, node_color='yellow', node_size=700, alpha=0.8)
+
+    # Draw edges
+    edge_colors = [data['color'] for _, _, data in G.edges(data=True)]
+    edge_styles = [data['style'] for _, _, data in G.edges(data=True)]
+    nx.draw_networkx_edges(G, pos, edge_color=edge_colors, style=edge_styles, width=2, alpha=0.7)
+
+    # Draw labels
+    labels = {node: node.replace("x", "") for node in G.nodes()}
+    nx.draw_networkx_labels(G, pos, labels=labels, font_size=12, font_color='black')
+
+    # Remove axis
+    plt.axis('off')
+
+    # Show plot
     plt.title("Decision Tree")
     plt.show()
 
@@ -120,3 +136,4 @@ if non_satisfiable_solutions:
 
 # Plot the decision tree
 plot_decision_tree(satisfiable_solutions, non_satisfiable_solutions)
+
