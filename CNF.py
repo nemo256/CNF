@@ -1,9 +1,3 @@
-import networkx as nx
-import matplotlib.pyplot as plt
-
-
-filename = 'clauses.txt'
-
 def solve_binary_cnf(cnf):
     """
     Résout une expression CNF binaire.
@@ -75,6 +69,7 @@ def parse_cnf_from_file(filename):
     return cnf
 
 # Programme principal
+filename = 'clauses.txt'
 cnf = parse_cnf_from_file(filename)
 satisfiable_solutions, non_satisfiable_solutions = solve_binary_cnf(cnf)  # Résolution de l'expression CNF
 
