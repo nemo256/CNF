@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
+
 filename = 'clauses.txt'
 
 def solve_binary_cnf(cnf):
