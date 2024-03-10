@@ -18,7 +18,6 @@
 
 * [Install 🔨](#install)
 * [Use 🚀](#use)
-* [Develop ⚙️](#develop)
 * [License 📑](#license)
 
 ## Install 🔨
@@ -34,10 +33,15 @@ $ pip install -r requirements.txt
 ## Use 🚀
 > Use an example:
 - Test a CNF e.g (x1 OR x2) AND (x1 or NOT x2)
+- Create a clauses.txt file and write the following CNF:
 ```shell
-$ clause 1: 1 2     [ENTER]
-$ clause 2: 1 -2    [ENTER]
-$ clause 3:         [ENTER] # leave empty to start looking for solutions
+1 2 0
+1 -2 0
+3 0
+```
+- Now run the program:
+```shell
+$ python CNF.py
 ```
 
 ## License 📑
