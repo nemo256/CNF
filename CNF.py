@@ -84,8 +84,8 @@ if satisfiable_solutions:
 else:
     print("\033[31mAucune solution satisfaisante trouvée.")
 
-if non_satisfiable_solutions:
-    print("\033[31mSolutions non satisfaisantes: ", len(non_satisfiable_solutions))
-    for solution in non_satisfiable_solutions:
-        print("Affectation :", solution)
+# if non_satisfiable_solutions:
+#     print("\033[31mSolutions non satisfaisantes: ", len(non_satisfiable_solutions))
+#     for solution in non_satisfiable_solutions:
+#         print("Affectation :", solution)
 
